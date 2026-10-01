@@ -60,5 +60,4 @@ The relational schema implements clean separation between authentication primiti
 * Visual Studio 2022 or Visual Studio Code with the C# Dev Kit extension
 
 
-   git clone [https://github.com/](https://github.com/)<your-username>/cairo-metro-subscription.git
-   cd cairo-metro-subscription
+   
