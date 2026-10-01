@@ -99,7 +99,7 @@ The relational schema implements clean separation between authentication primiti
 
 Mohamed Gamal  
 Backend Software Developer  
-* LinkedIn: https://www.linkedin.com  
-* GitHub: https://github.com
+* LinkedIn: (https://www.linkedin.com/in/mohamed-gamal-763354288/)  
+* GitHub: (https://github.com/Mgemyy)
 
    
