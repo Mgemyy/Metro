@@ -62,7 +62,7 @@ The relational schema implements clean separation between authentication primiti
 
 1. Clone the repository:
    git clone (https://github.com/Mgemyy/Metro.git)
-   cd cairo-metro-subscription
+   cd Metro
 
 2. Configure the database connection string in appsettings.json:
    "ConnectionStrings": {
