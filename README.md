@@ -61,7 +61,7 @@ The relational schema implements clean separation between authentication primiti
 ### Installation Guide
 
 1. Clone the repository:
-   git clone https://github.com/<your-username>/cairo-metro-subscription.git
+   git clone (https://github.com/Mgemyy/Metro.git)
    cd cairo-metro-subscription
 
 2. Configure the database connection string in appsettings.json:
@@ -78,7 +78,7 @@ The relational schema implements clean separation between authentication primiti
    dotnet run
 
 ### Default System Accounts (Seeded)
-* Administrator:
+* Administrator: (for local development only)
   * Email: admin@metro.com
   * Password: Admin@123
 * Standard Commuter:
