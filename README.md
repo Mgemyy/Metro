@@ -58,6 +58,48 @@ The relational schema implements clean separation between authentication primiti
 * .NET SDK (Version 8.0 or later)
 * Microsoft SQL Server (LocalDB, Express, or Enterprise Edition)
 * Visual Studio 2022 or Visual Studio Code with the C# Dev Kit extension
+### Installation Guide
 
+1. Clone the repository:
+   git clone https://github.com/<your-username>/cairo-metro-subscription.git
+   cd cairo-metro-subscription
+
+2. Configure the database connection string in appsettings.json:
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MetroDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+   }
+
+3. Execute migration scripts to construct the database schema:
+   Update-Database
+   # Or using .NET CLI:
+   dotnet ef database update
+
+4. Launch the application:
+   dotnet run
+
+### Default System Accounts (Seeded)
+* Administrator:
+  * Email: admin@metro.com
+  * Password: Admin@123
+* Standard Commuter:
+  * Email: user@metro.com
+  * Password: User@123
+
+---
+
+## Technical Enhancements Roadmap
+
+* Integration of external PCI-compliant payment gateways (Fawry / Paymob) for automated transaction reconciliation.
+* Development of an inspector-facing web terminal with integrated camera scanning for gate-side pass validation.
+* Implementation of distributed background schedulers (Hangfire) to manage automated expiry alerts and subscription cycle renewals.
+
+---
+
+## Developer Information
+
+Mohamed Gamal  
+Backend Software Developer  
+* LinkedIn: https://www.linkedin.com  
+* GitHub: https://github.com
 
    
