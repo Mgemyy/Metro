@@ -48,9 +48,13 @@ namespace MetroApp.Controllers
             if (subscription == null || subscription.Status != SubscriptionStatus.Approved)
                 return NotFound();
 
-            // Data encoded inside the QR Code
-            string payload = $"METRO-PASS:{subscription.Id}|User:{subscription.User.FullName}|Route:{subscription.StartStation.Name}-{subscription.EndStation.Name}|ValidTo:{subscription.EndDate:yyyy-MM-dd}";
+            var currentUserId = _userManager.GetUserId(User);
+            var isAdmin = User.IsInRole("Admin");
 
+            if (subscription.UserId != currentUserId && !isAdmin)
+                return Forbid(); 
+
+            string payload = $"METRO-PASS:{subscription.Id}|User:{subscription.User.FullName}|Route:{subscription.StartStation.Name}-{subscription.EndStation.Name}|ValidTo:{subscription.EndDate:yyyy-MM-dd}";
             ViewBag.QrCodeImage = _qrCodeService.GenerateQrCodeBase64(payload);
 
             return View(subscription);
@@ -179,7 +183,7 @@ namespace MetroApp.Controllers
         }
         private async Task<string> UploadDocumentAsync(IFormFile file)
         {
-            string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+            string uploadsFolder = Path.Combine(_environment.ContentRootPath, "PrivateUploads");
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
 
@@ -191,7 +195,32 @@ namespace MetroApp.Controllers
                 await file.CopyToAsync(fileStream);
             }
 
-            return $"/uploads/{uniqueFileName}";
+            return uniqueFileName; 
+        }
+        [HttpGet]
+        public async Task<IActionResult> ViewDocument(int subscriptionId, string type)
+        {
+            var subscription = await _context.Subscriptions.FindAsync(subscriptionId);
+            if (subscription == null) return NotFound();
+
+            var currentUserId = _userManager.GetUserId(User);
+            if (subscription.UserId != currentUserId && !User.IsInRole("Admin"))
+                return Forbid();
+
+            string fileName = type switch
+            {
+                "nationalId" => subscription.NationalIdPhotoPath,
+                "personalPhoto" => subscription.PersonalPhotoPath,
+                _ => null
+            };
+
+            if (fileName == null) return NotFound();
+
+            string filePath = Path.Combine(_environment.ContentRootPath, "PrivateUploads", fileName);
+            if (!System.IO.File.Exists(filePath)) return NotFound();
+
+            var contentType = "image/png"; 
+            return PhysicalFile(filePath, contentType);
         }
     }
 }
