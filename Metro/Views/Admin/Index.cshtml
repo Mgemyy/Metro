@@ -1,0 +1,99 @@
+﻿@model IEnumerable<MetroApp.Models.Subscription>
+
+@{
+    ViewData["Title"] = "Admin - Subscriptions Review";
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Incoming Subscription Requests</h4>
+            <span class="badge bg-light text-dark">Total: @Model.Count()</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Applicant</th>
+                            <th>National ID</th>
+                            <th>Route</th>
+                            <th>Type</th>
+                            <th>Cost</th>
+                            <th>Documents</th>
+                            <th>Current Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@item.User.FullName</strong><br />
+                                    <small class="text-muted">@item.User.Email</small>
+                                </td> 
+
+                                <td>@item.User.NationalId</td>
+                                <td>@item.StartStation.Name ➔ @item.EndStation.Name</td>
+                                <td>@item.Type</td>
+                                <td>@item.TotalPrice.ToString("C")</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="@item.PersonalPhotoPath" target="_blank" class="btn btn-outline-primary">Photo</a>
+                                        <a href="@item.NationalIdPhotoPath" target="_blank" class="btn btn-outline-primary">ID Card</a>
+
+                                        @if (!string.IsNullOrEmpty(item.HrLetterPath))
+                                        {
+                                            <a href="@item.HrLetterPath" target="_blank" class="btn btn-outline-info" title="@item.EmployerName">HR Letter</a>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(item.StudentProofPath))
+                                        {
+                                            <a href="@item.StudentProofPath" target="_blank" class="btn btn-outline-success" title="@item.SchoolOrUniversityName">Student Proof</a>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.Status == MetroApp.Models.Enums.SubscriptionStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                    else if (item.Status == MetroApp.Models.Enums.SubscriptionStatus.Approved)
+                                    {
+                                        <span class="badge bg-success">Approved</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Rejected</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == MetroApp.Models.Enums.SubscriptionStatus.Pending)
+                                    {
+                                        <div class="d-flex gap-1">
+                                            <form asp-action="UpdateStatus" method="post">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="status" value="@MetroApp.Models.Enums.SubscriptionStatus.Approved" />
+                                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                            </form>
+                                            <form asp-action="UpdateStatus" method="post">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="status" value="@MetroApp.Models.Enums.SubscriptionStatus.Rejected" />
+                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                            </form>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Processed</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

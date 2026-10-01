@@ -1,0 +1,150 @@
+﻿@model MetroApp.ViewModels.SubscriptionRequestViewModel
+
+@{
+    ViewData["Title"] = "Apply for Metro Card Subscription";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0">Metro Card Application Form</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- 1. Application Type -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Application Type:</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input asp-for="IsFirstTime" class="form-check-input" type="radio" value="true" id="firstTime" checked>
+                                    <label class="form-check-label" for="firstTime">First Time (New Card)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="IsFirstTime" class="form-check-input" type="radio" value="false" id="renew">
+                                    <label class="form-check-label" for="renew">Renew Existing Card</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Stations -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-2">
+                                <label asp-for="StartStationId" class="form-label fw-bold">Departure Station (Near Residence):</label>
+                                <select asp-for="StartStationId" asp-items="Model.Stations" class="form-select">
+                                    <option value="">-- Select Departure Station --</option>
+                                </select>
+                                <span asp-validation-for="StartStationId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label asp-for="EndStationId" class="form-label fw-bold">Destination Station (Work / Study):</label>
+                                <select asp-for="EndStationId" asp-items="Model.Stations" class="form-select">
+                                    <option value="">-- Select Destination Station --</option>
+                                </select>
+                                <span asp-validation-for="EndStationId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- 3. Identity Documents -->
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="NationalId" class="form-label fw-bold">National ID (14 Digits):</label>
+                                <input asp-for="NationalId" class="form-control" maxlength="14" placeholder="14-digit National ID" />
+                                <span asp-validation-for="NationalId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="PersonalPhoto" class="form-label fw-bold">Personal Photo (White BG):</label>
+                                <input asp-for="PersonalPhoto" type="file" class="form-control" accept="image/*" />
+                                <span asp-validation-for="PersonalPhoto" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="NationalIdPhoto" class="form-label fw-bold">National ID Card Copy:</label>
+                                <input asp-for="NationalIdPhoto" type="file" class="form-control" accept="image/*" />
+                                <span asp-validation-for="NationalIdPhoto" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- 4. Employment & Study Category -->
+                        <div class="card bg-light p-3 mb-4">
+                            <label class="form-label fw-bold">Occupation / Status:</label>
+                            <select asp-for="UserCategory" class="form-select mb-3" id="categorySelect">
+                                <option value="General">General Public / Unemployed</option>
+                                <option value="Employee">Employee (Public / Private Sector)</option>
+                                <option value="Student">Student (School / University)</option>
+                            </select>
+
+                            <!-- Employee Section -->
+                            <div id="employeeSection" style="display:none;" class="border-top pt-3">
+                                <div class="mb-3">
+                                    <label asp-for="EmployerName" class="form-label">Employer Name:</label>
+                                    <input asp-for="EmployerName" class="form-control" placeholder="Company or Governmental Entity" />
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="HrLetter" class="form-label">Proof of Employment (HR Letter / Work ID):</label>
+                                    <input asp-for="HrLetter" type="file" class="form-control" accept="image/*,application/pdf" />
+                                </div>
+                            </div>
+
+                            <!-- Student Section -->
+                            <div id="studentSection" style="display:none;" class="border-top pt-3">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Education Level:</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input asp-for="IsUniversityStudent" class="form-check-input" type="radio" value="true" id="uniTrue" checked>
+                                            <label class="form-check-label" for="uniTrue">University Student</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input asp-for="IsUniversityStudent" class="form-check-input" type="radio" value="false" id="uniFalse">
+                                            <label class="form-check-label" for="uniFalse">School Student</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="SchoolOrUniversityName" class="form-label">Institution / University Name:</label>
+                                    <input asp-for="SchoolOrUniversityName" class="form-control" placeholder="Enter school or university name" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label id="proofLabel" class="form-label">Enrollment Proof (Timetable / Transcript / University Card):</label>
+                                    <input asp-for="StudentProofDocument" type="file" class="form-control" accept="image/*,application/pdf" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">Submit Application for Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const categorySelect = document.getElementById('categorySelect');
+        const employeeSection = document.getElementById('employeeSection');
+        const studentSection = document.getElementById('studentSection');
+        const proofLabel = document.getElementById('proofLabel');
+
+        categorySelect.addEventListener('change', function () {
+            employeeSection.style.display = (this.value === 'Employee') ? 'block' : 'none';
+            studentSection.style.display = (this.value === 'Student') ? 'block' : 'none';
+        });
+
+        document.querySelectorAll('input[name="IsUniversityStudent"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (this.value === 'true') {
+                    proofLabel.innerText = "Enrollment Proof (Timetable / Transcript / University Card):";
+                } else {
+                    proofLabel.innerText = "School Enrollment Proof (Certificate / School ID / Stamped Form):";
+                }
+            });
+        });
+    </script>
+}
